@@ -1,13 +1,28 @@
 package panu.otp.servertest;
 
-/**
- * Hello world!
- *
- */
+import com.corundumstudio.socketio.*;
+import com.corundumstudio.socketio.listener.DataListener;
+
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws InterruptedException
     {
-        System.out.println( "Hello World!" );
+    	Configuration config = new Configuration();
+    	config.setHostname("localhost");
+    	config.setPort(9991);
+    	
+    	final SocketIOServer server = new SocketIOServer(config);
+    	server.addEventListener("chatevent", ChatObject.class, new DataListener<ChatObject>() {
+			public void onData(SocketIOClient client, ChatObject data, AckRequest ackSender) throws Exception {
+				server.getBroadcastOperations().sendEvent("chatevent", data);
+				System.out.println(data.getMessage());
+			}
+		});
+    	    	
+    	server.start();
+    	
+    	Thread.sleep(Integer.MAX_VALUE);
+    	
+    	server.stop();
     }
 }
