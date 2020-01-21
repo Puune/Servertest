@@ -1,1 +1,1 @@
-ECHO is on.
+Testing java socket.io
