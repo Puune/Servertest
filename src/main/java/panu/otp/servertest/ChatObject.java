@@ -15,4 +15,8 @@ public class ChatObject {
 	public String getMessage() {
 		return message;
 	}
+	
+	public String getUserName() {
+		return userName;
+	}
 }
