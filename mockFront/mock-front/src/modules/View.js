@@ -3,8 +3,12 @@ import socket from '../services/socket';
 
 const View = () => {
 
-  const click = () => {
+  const clickPing = () => {
     socket.sendMessage('ping');
+  }
+
+  const clickLogin = () => {
+    socket.login();
   }
 
   const socketContent = () => {
@@ -14,9 +18,15 @@ const View = () => {
   return(
     <div>
       <button
-        onClick={()=> click()}
+        onClick={()=> clickPing()}
         
       >send ping</button>
+
+      <button
+        onClick={()=> clickLogin()}
+      >
+        Login
+      </button>
     </div>
   )
 }
