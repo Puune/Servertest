@@ -1,10 +1,10 @@
 const socketIO = require('socket.io-client');
 
-const userName = 'user';
+const baseString = 'http://localhost:9991';
 var socket = null;
 
 const init = () => {
-  socket = socketIO.connect('http://localhost:9991');
+  socket = socketIO.connect(baseString);
 
   socket.on('connect', function(){
     console.log('connect');
@@ -17,10 +17,6 @@ const init = () => {
   socket.on('disconnect', function(){
     console.log('disconnect');
   });
-
-  socket.on('loginevent', function(data){
-    console.log('User logged with auth', data.auth);
-  })
 }
 
 const disconnect = () => {
@@ -37,18 +33,33 @@ const sendMessage = (message) => {
   socket.emit('chatevent', jsonObj);
 }
 
-const login = (name) => {
-  const jsonObj = {
-    user_id: "66",
-    username: "me",
-    password: "meme",
-    name: "em"
-  }
-  socket.emit('loginevent', jsonObj);
-}
-
-const getSomething = () => {
+const sendMessageTo = (message, target) => {
+  console.log(message + "  " + target);
   
+  const jsonObj = {
+    content: message,
+    message_id: 55115,
+    user_id: 123
+  }
+
+  const receivingGroup = socket.connect(baseString + "/" + target);
+
+  receivingGroup.emit('chatevent', jsonObj);
+  //receiver.disconnect();
 }
 
-export default {init, disconnect, sendMessage, login }
+
+const createGroup = (groupName) => {
+
+  console.log(groupName);
+  
+  const jsonObj = {
+    name: groupName,
+    users: []
+  }
+
+  socket.emit('createevent', jsonObj);
+}
+
+
+export default {init, disconnect, sendMessage, createGroup, sendMessageTo }
