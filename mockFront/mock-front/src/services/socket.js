@@ -4,7 +4,9 @@ const baseString = 'http://localhost:9991';
 var socket = null;
 
 const init = () => {
-  socket = socketIO.connect(baseString);
+  socket = socketIO.connect(baseString, {
+    query: "Authorization=kaiku"
+  });
 
   socket.on('connect', function(){
     console.log('connect');
