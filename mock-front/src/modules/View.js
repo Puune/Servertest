@@ -22,29 +22,6 @@ const View = (props) => {
     socket.sendMessageTo(form3, form2);
   }
 
-  const ChatList = (chats) => {
-
-    if(chats === null){
-      return <p></p>
-    }
-
-    return(
-      <u>
-        {chats.map((chat) => <li key={chat.chatName}><Chat chat={chat}/></li>)}
-      </u>
-    )
-  }
-
-  const Chat = (props) => {
-    return(
-      <div>
-        <p>{props.chat.chatName}</p>
-        <ul>
-          {props.chat.messages.map((message) => <li key={message.message_id}>{message.content}</li>)}
-        </ul>
-      </div>
-    )
-  }
 
   return(
     <div>
@@ -72,6 +49,35 @@ const View = (props) => {
           send
         </button>
       </form>
+
+      <ChatList chats={props.init.chats}></ChatList>
+    </div>
+  )
+}
+
+const ChatList = (props) => {
+
+  console.log(props.chats);
+  
+
+  if(props.chats === null){
+    return <p></p>
+  }
+
+  return(
+    <u>
+      {props.chats.map((chat) => <li key={chat.chatName}><Chat chat={chat}/></li>)}
+    </u>
+  )
+}
+
+const Chat = (props) => {
+  return(
+    <div>
+      <p>{props.chat.chatName}</p>
+      <ul>
+        {props.chat.messages.map((message) => <li key={message.message_id}>{message.content}</li>)}
+      </ul>
     </div>
   )
 }

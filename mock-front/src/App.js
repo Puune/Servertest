@@ -6,14 +6,15 @@ import axios from 'axios';
 
 function App() {
 
-  const [init, setInit] = useState({token: "kaiku"});
+  const [init, setInit] = useState({token: "kaiku", chats: []});
+  const[sockets, setSockets] = useState([]);
 
-  const [chats, setChats] = useState([]);
-
+  console.log("init: ", init);
+  
 
   return (
     <div className="App">
-      <Initialization init={init} setInit={setInit} />
+      <Initialization init={init} setInit={setInit} sockets={sockets} setSockets={setSockets} />
       <View init={init}/>
     </div>
   );
@@ -23,6 +24,9 @@ function App() {
 const Initialization = (props) => {
   const init = props.init;
   const setInit = props.setInit;
+  const sockets = props.sockets;
+  const setSockets = props.setSockets;
+
   const baseString = 'http://localhost:8080/';
   const userTemplate = (uName, uPSW, name) =>  ({username: uName, password: uPSW, name:name})
   const initUsers = [userTemplate('tester1', 'tester1', 'tester1'), userTemplate('tester2', 'tester2', 'tester2')];
@@ -57,7 +61,7 @@ const Initialization = (props) => {
   }
 
   const connectSocket = () => {
-    socket.init(init);
+    socket.init(init, props.setInit, sockets, setSockets);
   }
 
   return(

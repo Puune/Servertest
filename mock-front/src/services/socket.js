@@ -1,10 +1,26 @@
+import React, {useState} from 'react';
+import SOCKET from './socketTemplate';
+
 const socketIO = require('socket.io-client');
 
 const baseString = 'http://localhost:9991';
 var socket = null;
+var _sockets = null;
+var _setSockets = null;
 
-const init = async (init) => {
+const init = (init, setInit, sockets, setSockets) => {
+
+  _sockets = sockets;
+  _setSockets = setSockets;
+
+  console.log("chats: ", init.chats);
   
+  console.log("sockets: ", sockets);
+
+  init.chats.forEach(chat => {
+    setSockets(sockets.concat(new SOCKET(chat, init, setInit)))
+  });
+
   socket = socketIO.connect(baseString, {
     query: `Authorization=${init.token}`
   });
@@ -20,11 +36,19 @@ const init = async (init) => {
   socket.on('disconnect', function(){
     console.log('disconnect');
   });
+
+  socket.on('createChatEvent', function(data){
+    console.log('createChatEvent', data);
+    let newInit = init;
+    newInit = newInit.chats.concat(data);
+    setInit(newInit);
+
+    setSockets(sockets.concat(new SOCKET(data, init, setInit)));
+  })
 }
 
-const disconnect = () => {
 
-}
+
 
 const sendMessage = (message) => {
   const jsonObj = {
@@ -38,17 +62,14 @@ const sendMessage = (message) => {
 
 const sendMessageTo = (message, target) => {
   console.log("emit",message + "  " + target);
+  console.log("sockets", _sockets);
   
-  const jsonObj = {
-    content: message,
-    message_id: 55115,
-    user_id: 123
-  }
+  const socket = _sockets.find(socket => socket.name === target);
 
-  const receivingGroup = socket.connect(baseString + "/" + target);
+  console.log("sending to: ",socket);
+  
 
-  receivingGroup.emit('chatEvent', jsonObj);
-  //receiver.disconnect();
+  socket.sendMessage(message);
 }
 
 
@@ -68,4 +89,4 @@ const createGroup = (groupName, user_id) => {
 }
 
 
-export default {init, disconnect, sendMessage, createGroup, sendMessageTo }
+export default {init, sendMessage, createGroup, sendMessageTo }
