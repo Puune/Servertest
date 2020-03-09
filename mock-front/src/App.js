@@ -27,7 +27,7 @@ const Initialization = (props) => {
   const sockets = props.sockets;
   const setSockets = props.setSockets;
 
-  const baseString = 'http://localhost:8080/';
+  const baseString = 'http://localhost:8080/api/';
   const userTemplate = (uName, uPSW, name) =>  ({username: uName, password: uPSW, name:name})
   const initUsers = [userTemplate('tester1', 'tester1', 'tester1'), userTemplate('tester2', 'tester2', 'tester2')];
 
